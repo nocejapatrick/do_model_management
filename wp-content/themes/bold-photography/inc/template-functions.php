@@ -481,6 +481,7 @@ if ( ! function_exists( 'bold_photography_sections' ) ) :
 		get_template_part( 'template-parts/header/header-media' );
 		get_template_part( 'template-parts/slider/display-slider' );
 		get_template_part( 'template-parts/hero-content/content-hero' );
+		get_template_part( 'template-parts/instagram/instagram' );
 		get_template_part( 'template-parts/featured-content/display-featured' );
 		get_template_part( 'template-parts/portfolio/display-portfolio' );
 		get_template_part( 'template-parts/services/display-services' );

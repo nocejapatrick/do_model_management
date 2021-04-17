@@ -6,7 +6,154 @@ Version: 1.0.0
 Template: bold-photography
 */
 
+a{
+	outline: none !important;
+}
 
 .custom-header-content-wrapper .section-title-wrapper{
 	text-align:center;
+}
+
+#catch-instagram-feed-gallery-widget-7 h2{
+	text-align: center;
+	font-size: 3em;
+}
+
+#catch-instagram-feed-gallery-widget-7 .catch-instagram-feed-gallery-widget-wrapper{
+	margin-top: 45px;
+}
+
+.cf7sg-slider-section .cf7sg-collapsible-title .cf7sg-title{
+	font-weight: bold;
+	color:white;
+	margin-bottom: 10px;
+}
+.cf7-smart-grid.has-grid .wpcf7-form-control:not(img){
+	margin-top: 20px !important;
+}
+
+.artists-model-container{
+	display: flex;
+	align-items: top;
+	justify-content: left;
+	flex-wrap: wrap;
+}
+
+.artists-model-title{
+	text-align: center;
+}
+
+.artists-model-container > *{
+	flex: 0 0 20%;
+	padding: 17px;
+}
+
+.artists-models .entry-title{
+	font-size: 1em;
+	padding-top: 10px;
+	font-weight: 300;
+}
+
+.artists-model-image{
+	height: 300px;
+}
+
+.swiper-container{
+	overflow: visible !important;
+}
+.slider-touch-area-next{
+	right:-31vw !important;
+	width: 120px !important;
+}
+.slider-touch-area-prev{
+	left:-31vw !important;
+	width: 120px !important;
+}
+.slider-arrow.slider-arrow-next, .slider-arrow.slider-arrow-prev{
+	width: 100px;
+    height: 100px;
+    background-size: 94px 275px;
+}
+
+.slider_instance{
+	margin-bottom: 100px;
+}
+
+.artist-model-information{
+	font-weight: 300;
+	text-align: center;
+	margin-top: 20px !important;
+	font-size: 1em !important;
+}
+
+.current-post-ancestor.current-menu-parent a{
+	color: #f9a926;
+}
+
+.home .section{
+	padding: 0px !important;
+}
+
+#footer-instagram{
+	padding-top: 50px !important;
+}
+#catch-instagram-feed-gallery-widget-7{
+	margin: 0 0 0px;
+}
+
+.site-content > .wrapper {
+	padding: 42px 20px !important;
+}
+
+@media screen and (max-width:780px) {
+
+	.artists-model-container > *{
+		flex: 0 0 33%;
+		padding: 8px;
+	}
+
+}
+
+@media screen and (max-width:1700px) {
+
+	.slider-touch-area-next{
+		right:-23vw !important;
+		width: 120px !important;
+	}
+	.slider-touch-area-prev{
+		left:-23vw !important;
+		width: 120px !important;
+	}
+
+}
+
+
+
+@media screen and (max-width:500px) {
+
+
+	#catch-instagram-feed-gallery-widget-7 h2{
+		font-size: 2em;
+	}
+
+	#footer-instagram .wrapper{
+		padding: 0px 30px;
+	}
+
+	#footer-instagram .catch-instagram-feed-gallery-widget-wrapper.default .item{
+		width: 100%;
+	}
+	.cf7sg-slider-section .cf7sg-collapsible-title .cf7sg-title{
+		margin-top: 30px;
+		display: block;
+	}
+
+	.artists-model-container > *{
+		flex: 0 0 50%;
+		padding: 8px;
+	}
+
+	.artists-model-image{
+		height: 220px;
+	}
 }

@@ -7,9 +7,11 @@
  * @package Bold_Photography
  */
 
-get_header(); ?>
+get_header();
+$categories = get_the_category( $post->ID );
+?>
 
-	<div id="primary" class="content-area">
+	<div id="primary" class="<?= ($categories[0]->term_id==5) ? 'content-area' : '' ?>">
 		<main id="main" class="site-main">
 			<div class="archive-posts-wrapper">
 			<?php
@@ -30,17 +32,26 @@ get_header(); ?>
 				if ( have_posts() ) : ?>
 
 				<div class="section-content-wrapper">
-					<div id="infinite-post-wrap" class="archive-post-wrap grid">
+					<div id="infinite-post-wrap" class="<?= ($categories[0]->term_id==5) ? 'archive-post-wrap grid' : 'artists-model-container' ?>">
 						<?php
 						/* Start the Loop */
 						while ( have_posts() ) : the_post();
+							if(has_category(array('hair-makeup','photography','stylist','men','women','kids'))){
 
-							/*
+								get_template_part( 'template-parts/content/content-artists', get_post_format() );
+
+							}else{
+
+								/*
 							 * Include the Post-Format-specific template for the content.
 							 * If you want to override this in a child theme, then include a file
 							 * called content-___.php (where ___ is the Post Format name) and that will be used instead.
 							 */
 							get_template_part( 'template-parts/content/content', get_post_format() );
+
+							}
+							
+							
 
 						endwhile;
 
