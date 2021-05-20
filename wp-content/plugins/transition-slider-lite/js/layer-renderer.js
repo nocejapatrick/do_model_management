@@ -17,6 +17,10 @@ STX.LayerRenderer = function(params) {
     this.$canvas = jQuery(".slider-preview-area .stx-layers-canvas");
     this.$content = jQuery(".slider-preview-area .stx-layers-content");
 
+    this.$wrapperStatic = jQuery(".slider-preview-area .stx-layers-static");
+    this.$canvasStatic = jQuery(".slider-preview-area .stx-layers-canvas-static");
+    this.$contentStatic = jQuery(".slider-preview-area .stx-layers-content-static");
+
     this.$wrapper.bind("mousedown", function(e) {
         if(e.button === 2) return;
 
@@ -29,9 +33,34 @@ STX.LayerRenderer = function(params) {
         self.dragging = false;
     });
 
+    this.$wrapperStatic.bind("mousedown", function(e) {
+        if(e.button === 2) return;
+
+        self.dragging = true;
+        self.dragOriginX = e.clientX;
+        self.dragOriginY = e.clientY;
+    });
+
+    this.$wrapperStatic.bind("mouseup", function(e) {
+        self.dragging = false;
+    });
+
     this.styles = {};
 
     this.$wrapper.bind("mousemove", function(e) {
+        if (self.dragging) {
+            self.dragChangeX = e.clientX - self.dragOriginX;
+            self.dragChangeY = e.clientY - self.dragOriginY;
+            self.dragOriginX = e.clientX;
+            self.dragOriginY = e.clientY;
+            self.onLayerMove({
+                x: self.dragChangeX / self.layerScale,
+                y: self.dragChangeY / self.layerScale
+            });
+        }
+    });
+
+    this.$wrapperStatic.bind("mousemove", function(e) {
         if (self.dragging) {
             self.dragChangeX = e.clientX - self.dragOriginX;
             self.dragChangeY = e.clientY - self.dragOriginY;
@@ -81,7 +110,7 @@ STX.LayerRenderer = function(params) {
         var sliderWrapperWidth = this.$sliderPreviewArea.width();
         var sliderWrapperHeight = this.$sliderPreviewArea.height();
 
-        this.$wrapper.css({
+        var css = {
             width: layerWidth,
             height: layerHeight,
             minWidth: layerWidthMin,
@@ -90,9 +119,14 @@ STX.LayerRenderer = function(params) {
             maxHeight: layerHeightMax,
             "-webkit-transform": "translateX(-50%) translateY(-50%)",
             left: "50%",
-            top: "50%",
-            backgroundColor: o.layerBackground
-        });
+            top: "50%"
+        }
+
+        this.$wrapperStatic.css(css);
+
+        css.backgroundColor = o.layerBackground
+
+        this.$wrapper.css(css);
 
         var lw = this.$wrapper.width();
         var lh = this.$wrapper.height();
@@ -103,9 +137,11 @@ STX.LayerRenderer = function(params) {
         layerScale = scaleX > scaleY ? scaleY : scaleX;
         this.layerScale = layerScale;
 
-        this.$wrapper.css({
-            "-webkit-transform": "scale(" + layerScale + ") translateX(-50%) translateY(-50%)"
-        });
+        css = {"-webkit-transform": "scale(" + layerScale + ") translateX(-50%) translateY(-50%)"}
+
+        this.$wrapper.css(css);
+        this.$wrapperStatic.css(css);
+
         this.updateElementPositios();
     };
 
@@ -140,6 +176,9 @@ STX.LayerRenderer = function(params) {
     this.clear = function() {
         this.$wrapper.find("td").empty();
         this.$canvas.empty();
+
+        this.$wrapperStatic.find("td").empty();
+        this.$canvasStatic.empty();
     };
 
     this.loadFont = function(val) {
@@ -212,10 +251,15 @@ STX.LayerRenderer = function(params) {
         if ((view == "mobile" || view == "tablet") && el[view]) settingVal = el[view][settingName];
         else settingVal = el[settingName];
 
-        if (settingName == "textColor") settingName = "color";
-        el.color = el.textColor;
+        if (settingName === "textColor")  {
+            settingName = "color";
+            el.color = el.textColor;
+            if(el.hover)
+                el.hover.color = el.hover.textColor;
+        }
 
-        if (hover) settingVal = el.hover[settingName];
+        if (hover && el.hover)
+			settingVal = el.hover[settingName];
 
         switch (settingName) {
             case "src":
@@ -341,6 +385,9 @@ STX.LayerRenderer = function(params) {
         var view = this.deviceType;
         var pos = el.position;
         var mode = el.mode;
+        var $wrapper = el.static ? this.$wrapperStatic : this.$wrapper
+        var $content = el.static ? this.$contentStatic : this.$content
+        var $canvas = el.static ? this.$canvasStatic : this.$canvas
 
         if (el[view] && el[view].mode) mode = el[view].mode;
         if (el[view] && el[view].position) pos = el[view].position;
@@ -351,13 +398,13 @@ STX.LayerRenderer = function(params) {
         pos.offsetY = pos.offsetY || 0;
 
         if (mode == "content") {
-            var $container = this.$wrapper.find(".row-" + pos.y).find(".col-" + pos.x);
+            var $container = $wrapper.find(".row-" + pos.y).find(".col-" + pos.x);
 
             el.$node.addClass("el-" + pos.x);
             el.$node.removeClass("element-canvas").addClass("element-content");
 
             if (el.parent) {
-                this.$wrapper.find("#" + el.parent).append(el.$node);
+                $wrapper.find("#" + el.parent).append(el.$node);
             } else if (el.node.wrapper) {
                 el.node.wrapper.append(el.$node);
                 $container.append(el.node.wrapper);
@@ -365,13 +412,13 @@ STX.LayerRenderer = function(params) {
                 $container.append(el.$node);
             }
 
-            if (jQuery(".el-center").length && (jQuery(".el-left").length || jQuery(".el-right").length)) this.$content.find("td").css("width", "33.33%");
-            else this.$content.find("td").css("width", "auto");
+            if (jQuery(".el-center").length && (jQuery(".el-left").length || jQuery(".el-right").length)) $content.find("td").css("width", "33.33%");
+            else $content.find("td").css("width", "auto");
         } else {
             el.$node.removeClass("element-content").addClass("element-canvas");
             el.$node.removeClass("el-" + pos.x);
 
-            this.$canvas.append(el.node.wrapper);
+            $canvas.append(el.node.wrapper);
         }
 
         if (el.display) el.node.wrapper.css("display", el.display);
@@ -474,7 +521,7 @@ STX.LayerRenderer = function(params) {
         self.nodes++;
 
         el.node.onmousedown = function(e) {
-            if(e.button !== 2) self.onLayerMouseDown(Number(this.dataset.id), e.shiftKey);
+            if(e.button !== 2) self.onLayerMouseDown(this.id, e.shiftKey);
         };
 
         this.createStyle(el.index);

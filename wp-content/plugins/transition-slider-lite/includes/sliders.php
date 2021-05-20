@@ -27,8 +27,17 @@
 
                     </div>
 
-                <div style="font-size: 14px;background-color: #f8bf3a;border-radius: 4px;padding: 4px;margin: 20px 0px 0px 0px;text-align: center;color: #333; font-weight:bold">
-            <div>This is Transition Slider Lite. Get PRO version to enable more features - premium templates, import &amp; export sliders, more options for slider responsive size.</div>
+                <div class="STX-pro-banner">
+            <div style="font-size: 26px;">Why upgrade to Transition Slider Pro?</div>
+            <div class="STX-pro-banner-thumbs-wrapper">
+                <a class="STX-pro-banner-thumb STX-banner-1" href="https://transitionslider.com/templates" target="_blank">High quality templates</a>
+                <a class="STX-pro-banner-thumb STX-banner-2" href="https://transitionslider.com/templates/urban-shop" target="_blank">Quality text animations</a>
+                <a class="STX-pro-banner-thumb STX-banner-3" href="https://transitionslider.com/templates" target="_blank">iFrame element and more...</a>
+                <a class="STX-pro-banner-thumb STX-banner-4" href="https://transitionslider.com/templates" target="_blank">Adjust slider and layer settings on all devices</a>
+                <a class="STX-pro-banner-thumb STX-banner-5" href="https://transitionslider.com/templates" target="_blank">Import / Export sliders</a>
+                <a class="STX-pro-banner-thumb STX-banner-6" href="https://transitionslider.com/templates" target="_blank">Slide transitions: Line advanced, Crossfade gradient...</a>
+                <a class="STX-pro-banner-thumb STX-banner-7" href="https://codecanyon.net/item/transition-slider-wordpress-plugin/23531533/support" target="_blank">6 months support from purchase with options to extend</a>
+            </div>
         </div>
 
                 <div class="STX-admin-content STX-table STX-table-fixed STX-content">

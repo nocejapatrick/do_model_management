@@ -321,11 +321,65 @@ class TransitionSlider {
 
         $slider['rootFolder'] = $this->PLUGIN_DIR_URL."";
 
-        $output = '<div class="slider_instance" data-options="'.htmlentities(wp_json_encode($slider)).'"></div>';
+        ?>
+    <?php
 
-        $cssMode = isset($slider["transitionType"]) && $slider["transitionType"] == "css";
+        $output = '<div class="slider_instance" style="position: relative;" data-options="'.htmlentities(wp_json_encode($slider)).'">';
 
-        if(!$cssMode)
+        $firstSlideSrc = $slider['slides'][0]['src'];
+
+        if(isset($slider['preloadFirstSlide']) && $slider['preloadFirstSlide'] && (strpos($firstSlideSrc, 'jpg') !== false || strpos($firstSlideSrc, 'jpeg') !== false || strpos($firstSlideSrc, 'png') !== false )){
+        	?>
+		    <script>
+		        function STXsliderPreloader(sliderContainer){
+		        	var wrapper = sliderContainer;
+		        	var options = JSON.parse(wrapper.dataset.options);
+
+		        	var preloaderDiv = document.createElement('div')
+		        	wrapper.appendChild(preloaderDiv)
+		        	preloaderDiv.style.position = "absolute"
+		        	preloaderDiv.style.left = "50%"
+		        	preloaderDiv.style.transform = "translateX(-50%)"
+		        	preloaderDiv.style.webkitTransform = "translateX(-50%)"
+		        	preloaderDiv.style.backgroundImage = 'url("'+options.slides[0].src+'")';
+		        	preloaderDiv.style.zIndex = 2
+		        	preloaderDiv.style.backgroundSize = "cover";
+		        	preloaderDiv.style.backgroundPosition = "center";
+
+		        	var wrapperWidth = wrapper.clientWidth;
+		        	if(wrapperWidth < options.mobileSize) {
+		        		options.ratio = options.ratioMobile || options.ratioTablet || options.ratio;
+		        		options.responsive = options.responsiveMobile;
+		        		options.width = options.widthMobile || options.widthTablet || options.width;
+		        		options.height = options.heightMobile || options.heightTablet || options.height;
+		        	}else if(wrapperWidth < options.tabletSize){
+		        		options.ratio = options.ratioTablet || options.ratio;
+		        		options.responsive = options.responsiveTablet;
+		        		options.width = options.widthTablet || options.width;
+		        		options.height = options.heightTablet || options.height;
+		        	}
+
+		        	if(options.responsive){
+		        		preloaderDiv.style.width = "100%";
+		        		preloaderDiv.style.height = wrapper.clientWidth / options.ratio + "px";
+		        		wrapper.style.height = wrapper.clientWidth / options.ratio + "px";
+		        	}else{
+		        		preloaderDiv.style.width = options.width + "px";
+		        		preloaderDiv.style.height = options.height + "px";
+		        		wrapper.style.height = options.height + "px";
+		        	}
+		        }
+		    </script>
+		    <?php
+
+	    	$output .= '<script>STXsliderPreloader(document.currentScript.parentNode)</script>';
+
+   		}
+
+        $output .= '</div>';
+
+        $cssMode = isset($slider["mode"]) && $slider["mode"] == "css";
+
         	wp_enqueue_script("transitionslider-lib-three");
 		wp_enqueue_script("transitionslider-lib-swiper");
 		wp_enqueue_script("transitionslider-lib-anime-js");

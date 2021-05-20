@@ -1,9 +1,9 @@
 === Scroll Triggered Animations - Animate your site ===
 Contributors: aaronj1998, davros20
 Requires at least: 5.1
-Tested up to: 5.7
+Tested up to: 5.6
 Tags: Animation, Animate, CSS
-Stable tag: 3.0.5
+Stable tag: 3.0.6
 
 A highly customisable, yet user friendly interface for applying animations to your website frontend.
 
@@ -60,8 +60,8 @@ This could be a number of reasons. The most common issue for this is javascript 
 
 == Changelog ==
 
-= 3.0.5 =
-*Compability for WordPress 5.7
+= 3.0.6 =
+*Fixed jQuery Issue
 
 = 3.0.0 =
 *Complete Rework of the plugin backend to provide a clearer interface.

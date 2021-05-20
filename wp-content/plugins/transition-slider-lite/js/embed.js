@@ -9,6 +9,7 @@
             if (!optionsString) return;
             var o = JSON.parse(optionsString);
 
+
             convertStrings(o);
 
             if (o.navigation && !o.navigation.enable) o.navigation = false;
@@ -53,6 +54,23 @@
             }
 
             var slider = $(this).transitionSlider(o);
+            var slider_container = this
+
+            if(o.preloadFirstSlide){
+
+                var sliderLoading = true
+
+                                $(slider.data("transitionSlider")).trigger("hideLoading")
+
+                $(slider.data("transitionSlider")).on("hideLoading", function(){
+                    if(sliderLoading){
+                        slider_container.removeChild(slider_container.children[0])
+                        slider_container.removeChild(slider_container.children[0])
+                        slider_container.style.height = "initial"
+                    }
+                    sliderLoading = false
+                })
+            }
         });
 
         function convertStrings(obj) {

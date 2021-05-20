@@ -6,8 +6,8 @@ License URI: http://www.gnu.org/licenses/gpl.html
 Tags: slide anything, master slider, wordpress slider, smart slider, meta slider, slider, slide anything, layer slider, video slider, touch slider, content slider, SEO, vertical slider, HTML5 slider, hardware accelerate, animation, mobile slider, iOS, android, youtube slider, horizontal slider, responsive slider, fullscreen slider, post slider, image slider, photo slider, online album, mobile slider, WordPress slider,wpml, ,ultisite, wistia, woocommerce, product slider, woocommerce slider, portfolio, gallery, lightweight slider, carousel, lightbox, slideshow
 Requires PHP: 5.4
 Requires at least: 4.8
-Tested up to: 5.7
-Stable tag: 2.17.0
+Tested up to: 5.7.2
+Stable tag: 2.18.1
 
 
 Easy to use WordPress video slider and image slider plugin with seamless transitions, responsive animated layers and templates included. Build any slider without coding! Create beautiful responsive slideshow, image slider, video slider, layer slider with animated layers and transition effects Slide, Fade, Zoom, Warp, Crossfade, Flash, Twirl, Roll, Stretch.
@@ -299,6 +299,30 @@ If you have any question about working with "Transition Slider", you can take a 
 
 
 == Changelog ==
+
+= Version 2.18.1 / (17.05.2021) =
+* [BUG]   Fixed issue where slider crashed when checking static elements.
+
+= Version 2.18.0 / (17.05.2021) =
+* [FEATURE]   From now on, each element has a static option with which any element can remain visible on any slide (eg you can add a watermark to your slide or custom navigation ...)
+* [FEATURE]   Through the static elements it is possible to arrange custom navigation and pagination, with which you can go to the next, previous or jump to any slide you define.
+* [FEATURE]   Extended autoplay option where now each slide can have its own autoplay duration.
+* [FEATURE]   The autoplay option now has a "Pause on hover" extension, when the user moves the mouse over the slider the current slide will be paused.
+* [FEATURE]   Autoplay also has an additional option - visual progress, with this option you can display a small circular progress bar that shows in real time what is duration of current slide.
+* [FEATURE]   From now on, the background slide does not have to be an image or a video, but can also be a color. We have expanded the option so that you can add two colors and create a gradient color, there is also the option of a horizontal or vertical gradient.
+* [FEATURE]   A new option that allows slides within the slider to be displayed in a random order when loading.
+* [FEATURE]   Crossfade - custom alpha map | it is possible to add any alpha map for the crossfade effect and thus we have enabled even more combinations to create new transitions.
+* [IMPROVEMENT]   We have added an option with which you can quickly load a slider on your page.
+* [IMPROVEMENT]   We have shown more clearly some of the options we offer in the PRO version using a banner.
+* [IMPROVEMENT]   The name of the transitions is now visible below each video.
+* [IMPROVEMENT]   Preview video transitions are now played only on the hover over the transition, to make it easier to spot the selected transition.
+* [IMPROVEMENT]   jQuery updated documentation that can be found at https://transition-slider.gitbook.io/wordpress/
+* [BUG]   For arabic web page display fixed the problem with the display of navigation arrows.
+* [BUG]   Fixed a situation where sometimes slides could not be edited.
+* [BUG]   The video preview of the transition is now playing when the slide is changed.
+* [BUG]   We fixed the initial slide option which now works in preview if the inital slide parameter changes.
+* [BUG]   The autoplay timer was sometimes not reset to change the slide via navigation or pagination.
+* [BUG]   Fixed a situation where the editor stopped working when changing the font color.
 
 = Version 2.17.1 / (06.04.2021) =
 * [IMPROVEMENT]   If the slider name is longer, then in the layer editor it overlaps over the device icon.

@@ -32,7 +32,7 @@
             animateCSSName,
             previewSlilderInstance,
             sliderOptionsChanged = false,
-            colorPickerArray = {},
+            colorPickers = [],
             listOfDropdownsInEditor;
 
         $(".slide-settings-tabs-wrapper").tabs();
@@ -126,7 +126,7 @@
 		if(options.forceResponsiveMobile == undefined) options.forceResponsiveMobile = options.forceResponsive;
 		if(options.forceResponsiveTablet == undefined) options.forceResponsiveTablet = options.forceResponsive;
 
-        options.lightboxMode = options.lightboxMode || {}
+        options.lightboxMode = options.lightboxMode || {};
 
         if(typeof options.lightboxModeMobile == "undefined") {
 			options.lightboxModeMobile = {
@@ -258,7 +258,7 @@
             if (o.keyboard && !o.keyboard.enable) o.keyboard = false;
             if (o.autoplay && !o.autoplay.enable) o.autoplay = false;
             if (o.shadow && o.shadow == "off") o.shadow = null;
-            o.initialSlide = 0;
+            if (o.initialSlide) o.initialSlide = parseInt(o.initialSlide);
             o.hashNavigation = false;
 			o.forceResponsive = false;
 			o.forceFullscreen = false;
@@ -299,9 +299,13 @@
         addOption("general-settings", "shadow", "radio", "Slider shadow", "off", ["off", "effect1", "effect2", "effect3", "effect4", "effect5", "effect6"], "", "");
         addOption("general-settings", "grabCursor", "checkbox", "Grab cursor", true, "", "", "");
         addOption("general-settings", "stopOnLastSlide", "checkbox", "Stop on last slide", false, "", "");
+        addOption("general-settings", "showSlidesRandomOrder", "checkbox", "Display slides in random order", false, "", "");
         addOption("general-settings", "overlay", "color", "Overlay color (between layer and background)", "", "", "");
         addOption("general-settings", "parallax", "text", "Parallax factor (between 0 and 1)", "", "", "");
         addOption("general-settings", "invertColorSelectors", "text", "CSS selector for Menu (used to change menu colors on slide change)", "", "", "");
+        addOption("general-settings", "preloadFirstSlide", "checkbox", "Preload first slide", false, "", "", "");
+
+
 
         addOption("size", "responsive", "checkbox", "Responsive mode", true, "", "hasSubitem", "", "desktop");
 		addOption("size", "ratio", "text", "Responsive ratio (width / height)", "2", "", "isSubitem", "", "desktop");
@@ -322,7 +326,8 @@
         addOption("layer", "layerHeightMax", "textWithUnit", "Max Height", "", ["px", "%"], "", "", "desktop");
         addOption("autoplay", "autoplay.enable", "checkbox", "Enable", false, "", "");
         addOption("autoplay", "autoplay.delay", "textWithUnit", "Delay between transitions", 3000, "ms", "");
-        addOption("autoplay", "autoplay.disableOnInteraction", "checkbox", "Disable on user interaction", true, "", "");
+		addOption("autoplay", "autoplay.progress", "checkbox", "Show autoplay progress", false, "");
+        addOption("autoplay", "autoplay.pauseOnHover", "checkbox", "Pause on mouse hover", false, "", "");
         addOption("autoplay", "autoplay.reverseDirection", "checkbox", "Reverse direction", false, "");
 
         addOption("buttons", "buttons.pauseVisible", "checkbox", "Pause button", false, "", "", "");
@@ -617,11 +622,13 @@
                     jQueryInputElement.val("");
                     jQueryInputElement.trigger("change");
                 });
-            if (name)
-                colorPickerArray[name] = {
+            if (name){
+                colorPickers.push({
+                    name: name,
                     pickr: pickr,
                     el: colorElement
-                };
+                })
+            }
         }
 
         $(".STX-edit-dropdown").click(function() {
@@ -806,7 +813,7 @@
         $("#tabs-slide")
             .find("input")
             .change(function() {
-                if (this.name) {
+                if (this.name && currentSlide > -1) {
                     var arr = this.name.split(".");
                     var val = this.type == "checkbox" ? this.checked : this.value;
                     if (arr.length == 2) {
@@ -819,7 +826,7 @@
         $("#tabs-slide")
             .find("select")
             .change(function() {
-                if (this.name) {
+                if (this.name && currentSlide > -1) {
                     var arr = this.name.split(".");
                     if (arr.length == 2) {
                         if (typeof options.slides[currentSlide][arr[0]] != "object") options.slides[currentSlide][arr[0]] = {};
@@ -1002,7 +1009,8 @@
                     }
                     options.slides[currentSlide][key] = dropdownOptions[0].value;
                 }
-            });
+
+                });
 
             $("#direction").change(function(e) {
                 onElementSettingChanged(true);
@@ -1280,11 +1288,19 @@
                 .prop("checked", false);
             $("#tabs-slide select").val("");
 
+            if(!slideOptions.backgroundColor)
+                setColorPicker("backgroundColor.slide", null)
+            else
+                setColorPicker("backgroundColor.slide", slideOptions.backgroundColor)
+
             for (var key in slideOptions) {
                 var $el = $("#tabs-slide").find("#" + key);
                 var val = slideOptions[key];
                 typeof val == "boolean" ? $el.prop("checked", val) : $el.val(val);
             }
+
+            var transitionEffect = slideOptions.transitionEffect || options.transitionEffect || "slide"
+            $("#transitionEffect").val(transitionEffect).trigger("change")
 
             clearSlideElements();
             unfocusLayerElement();
@@ -1578,7 +1594,36 @@
         function renderLayers() {
             if (renderLayersDisabled) return;
 
-            layerRenderer.render(options.slides[currentSlide].elements, deviceType);
+            var all = []
+            var cur = []
+
+            options.slides[currentSlide].elements.forEach(function(el){
+                if(!el.static){
+                    all.push(el)
+                    cur.push(el)
+                }
+            })
+
+            options.slides[currentSlide].elements.forEach(function(el){
+                if(el.static){
+                    cur.push(el)
+                }
+            })
+
+            options.slides.forEach(function(slide, index){
+				if(slide.elements){
+					slide.elements.forEach(function(el){
+						if(el.static ) {
+							all.push(el)
+						}
+					})
+				}
+            })
+
+
+            options.slides[currentSlide].elements = cur
+
+            layerRenderer.render(all, deviceType);
         }
 
         function updateDeviceType() {
@@ -1732,7 +1777,7 @@
                 }
             }
             updateCurrentElement(target.name, hover);
-            if (target.name == "mode" || target.name == "position.x" || target.name == "position.y") renderLayers();
+            if (target.name == "mode" || target.name == "position.x" || target.name == "position.y" || target.name == "static") renderLayers();
         }
 
         $('textarea[name="customCSS"]').bind("change keyup paste", function(e) {
@@ -2075,10 +2120,12 @@
         function generateNewColorPickerElements() {
             $(".color-picker").each(function() {
                 var hover = $(this).hasClass("has-hover");
+                var slide = $(this).hasClass("slide-option");
                 var name = $(this).attr("name");
-                var property = hover ? name + ".hover" : name;
+                name = hover ? name + ".hover" : name;
+                name = slide ? name + ".slide" : name;
 
-                createColorPickerElement($(this), null, property);
+                createColorPickerElement($(this), null, name);
             });
         }
 
@@ -2087,37 +2134,35 @@
             listOfDropdownsInEditor = editorElement.getElementsByTagName("select");
 
             function formatTransition(state) {
-                var path = window.data.stx_plugin_url + state.videoURL;
-                var lable = '';
-                if (!state.id && !state.videoURL) {
+                if (!state.id) {
                     return state.text;
                 }
+                var lable = '';
+                var path = window.data.stx_plugin_url + "assets/video/" + state.id + ".mp4"
                 if(state.disabled) var lable = '<span class="STX-transition-video-pro">PRO</span>';
-                var $state = $('<video width="130" height="74" autoplay loop muted>' + "<source src=" + path + ' type="video/mp4" />' + "</video>" + lable).hover(function(event) {
+                var name = STX.Effects[state.id].name
+                var $state = $('<video width="130" height="74" loop muted>' + "<source src=" + path + ' type="video/mp4" />' + "</video><p>" + name + "</p>" + lable).hover(function(event) {
                     event.preventDefault();
+                    var vid = this.parentElement.firstElementChild
                     if (event.type === "mouseenter") {
-                        $(this).removeAttr("controls");
+                        vid.play();
                     } else if (event.type === "mouseleave") {
-                        $(this).removeAttr("controls");
+                        vid.currentTime = 0;
+                        vid.pause();
                     }
+
                 });
 
                 return $state;
             }
 
             function formatTransitionSelection(state) {
-                var path = window.data.stx_plugin_url + state.videoURL;
-                if (!state.id && !state.videoURL) {
+                if (!state.id) {
                     return state.text;
                 }
-                var $state = $('<video width="280" height="auto" autoplay loop muted>' + "<source src=" + path + ' type="video/mp4" />' + "</video>").hover(function(event) {
-                    event.preventDefault();
-                    if (event.type === "mouseenter") {
-                        $(this).removeAttr("controls");
-                    } else if (event.type === "mouseleave") {
-                        $(this).removeAttr("controls");
-                    }
-                });
+                var path = window.data.stx_plugin_url + "assets/video/" + state.id + ".mp4"
+                var name = STX.Effects[state.id].name
+                var $state = $('<video width="280" height="auto" autoplay loop muted>' + "<source src=" + path + ' type="video/mp4" />' + "</video><p>"+ name +"</p>");
                 return $state;
             }
 
@@ -2749,7 +2794,7 @@
             for (var i = 0; i < listOfDropdownsInEditor.length; i++) {
                 switch (listOfDropdownsInEditor[i].name) {
                     case "transitionEffect":
-                        $(listOfDropdownsInEditor[i]).select2({
+                        $(listOfDropdownsInEditor[i]).select2stx({
                             dropdownParent: $("#edit-slide-modal"),
                             width: "100%",
                             selectionCssClass: "selection-transition-effect",
@@ -2762,9 +2807,8 @@
                                     text: "Default",
                                     children: [
                                         {
-                                            id: "",
-                                            text: "Default",
-                                            videoURL: "assets/video/slide.mp4"
+                                            id: "slide",
+                                            text: "Default"
                                         }
                                     ]
                                 },
@@ -2773,43 +2817,36 @@
                                     children: [
                                         {
                                             id: "blur",
-                                            text: "Blur",
-                                            videoURL: "assets/video/blur.mp4"
+                                            text: "Blur"
                                         },
                                         {
                                             id: "blur2",
                                             text: "Blur 2",
-                                            videoURL: "assets/video/blur2.mp4",
                                             disabled: true
                                         },
                                         {
                                             id: "blur3",
                                             text: "Blur 3",
-                                            videoURL: "assets/video/blur3.mp4",
                                             disabled: true
                                         },
                                         {
                                             id: "blur4",
                                             text: "Blur 4",
-                                            videoURL: "assets/video/blur4.mp4",
                                             disabled: true
                                         },
                                         {
                                             id: "blur5",
                                             text: "Blur ",
-                                            videoURL: "assets/video/blur5.mp4",
                                             disabled: true
                                         },
                                         {
                                             id: "blur6",
                                             text: "Blur 6",
-                                            videoURL: "assets/video/blur6.mp4",
                                             disabled: true
                                         },
                                         {
                                             id: "blur7",
                                             text: "Blur 7",
-                                            videoURL: "assets/video/blur7.mp4",
                                             disabled: true
                                         }
                                     ]
@@ -2820,25 +2857,21 @@
                                         {
                                             id: "crossfade1",
                                             text: "Crossfade 1",
-                                            videoURL: "assets/video/crossfade1.mp4",
                                             disabled: true
                                         },
                                         {
                                             id: "crossfade2",
                                             text: "Crossfade 2",
-                                            videoURL: "assets/video/crossfade2.mp4",
                                             disabled: true
                                         },
                                         {
                                             id: "crossfade3",
                                             text: "Crossfade 3",
-                                            videoURL: "assets/video/crossfade3.mp4",
                                             disabled: true
                                         },
                                         {
                                             id: "crossfade4",
                                             text: "Crossfade 4",
-                                            videoURL: "assets/video/crossfade4.mp4",
                                             disabled: true
                                         }
                                     ]
@@ -2848,13 +2881,11 @@
                                     children: [
                                         {
                                             id: "fade",
-                                            text: "Fade 1",
-                                            videoURL: "assets/video/fade.mp4"
+                                            text: "Fade 1"
                                         },
                                         {
                                             id: "fade2",
-                                            text: "Fade 2",
-                                            videoURL: "assets/video/fade2.mp4"
+                                            text: "Fade 2"
                                         }
                                     ]
                                 },
@@ -2863,67 +2894,51 @@
                                     children: [
                                         {
                                             id: "line",
-                                            text: "Line 1",
-                                            videoURL: "assets/video/line.mp4"
+                                            text: "Line 1"
                                         },
                                         {
                                             id: "line2",
                                             text: "Line 2",
-                                            videoURL: "assets/video/line2.mp4",
                                             disabled: true
                                         },
                                         {
                                             id: "line3",
                                             text: "Line 3",
-                                            videoURL: "assets/video/line3.mp4",
-                                            disabled: true
-                                        },
-                                        {
-                                            id: "line3",
-                                            text: "Line 3",
-                                            videoURL: "assets/video/line3.mp4",
                                             disabled: true
                                         },
                                         {
                                             id: "line4",
                                             text: "Line 4",
-                                            videoURL: "assets/video/line4.mp4",
                                             disabled: true
                                         },
                                         {
                                             id: "line5",
                                             text: "Line 5",
-                                            videoURL: "assets/video/line5.mp4",
                                             disabled: true
                                         },
                                         {
                                             id: "line6",
                                             text: "Line 6",
-                                            videoURL: "assets/video/line6.mp4",
                                             disabled: true
                                         },
                                         {
                                             id: "line7",
                                             text: "Line 7",
-                                            videoURL: "assets/video/line7.mp4",
                                             disabled: true
                                         },
                                         {
                                             id: "line8",
                                             text: "Line 8",
-                                            videoURL: "assets/video/line8.mp4",
                                             disabled: true
                                         },
                                         {
                                             id: "line9",
                                             text: "Line 9",
-                                            videoURL: "assets/video/line9.mp4",
                                             disabled: true
                                         },
                                         {
                                             id: "line10",
                                             text: "Line 10",
-                                            videoURL: "assets/video/line10.mp4",
                                             disabled: true
                                         }
                                     ]
@@ -2933,8 +2948,7 @@
                                     children: [
                                         {
                                             id: "powerzoom",
-                                            text: "Powerzoom 1",
-                                            videoURL: "assets/video/powerzoom.mp4"
+                                            text: "Powerzoom 1"
                                         }
                                     ]
                                 },
@@ -2943,31 +2957,26 @@
                                     children: [
                                         {
                                             id: "roll",
-                                            text: "Roll 1",
-                                            videoURL: "assets/video/roll.mp4"
+                                            text: "Roll 1"
                                         },
                                         {
                                             id: "roll2",
                                             text: "Roll 2",
-                                            videoURL: "assets/video/roll2.mp4",
                                             disabled: true
                                         },
                                         {
                                             id: "roll3",
                                             text: "Roll 3",
-                                            videoURL: "assets/video/roll3.mp4",
                                             disabled: true
                                         },
                                         {
                                             id: "roll4",
                                             text: "Roll 4",
-                                            videoURL: "assets/video/roll4.mp4",
                                             disabled: true
                                         },
                                         {
                                             id: "roll5",
                                             text: "Roll 5",
-                                            videoURL: "assets/video/roll5.mp4",
                                             disabled: true
                                         }
                                     ]
@@ -2977,8 +2986,7 @@
                                     children: [
                                         {
                                             id: "slide",
-                                            text: "Slide 1",
-                                            videoURL: "assets/video/slide.mp4"
+                                            text: "Slide 1"
                                         }
                                     ]
                                 },
@@ -2987,8 +2995,7 @@
                                     children: [
                                         {
                                             id: "stretch",
-                                            text: "Stretch 1",
-                                            videoURL: "assets/video/stretch.mp4"
+                                            text: "Stretch 1"
                                         }
                                     ]
                                 },
@@ -2997,8 +3004,7 @@
                                     children: [
                                         {
                                             id: "twirl",
-                                            text: "Twirl 1",
-                                            videoURL: "assets/video/twirl.mp4"
+                                            text: "Twirl 1"
                                         }
                                     ]
                                 },
@@ -3007,8 +3013,7 @@
                                     children: [
                                         {
                                             id: "warp",
-                                            text: "Warp 1",
-                                            videoURL: "assets/video/warp.mp4"
+                                            text: "Warp 1"
                                         }
                                     ]
                                 },
@@ -3017,37 +3022,26 @@
                                     children: [
                                         {
                                             id: "zoom",
-                                            text: "Zoom 1",
-                                            videoURL: "assets/video/zoom.mp4"
+                                            text: "Zoom 1"
                                         },
                                         {
                                             id: "zoom2",
                                             text: "Zoom 2",
-                                            videoURL: "assets/video/zoom2.mp4",
                                             disabled: true
                                         },
                                         {
                                             id: "zoom3",
                                             text: "Zoom 3",
-                                            videoURL: "assets/video/zoom3.mp4",
-                                            disabled: true
-                                        },
-                                        {
-                                            id: "zoom3",
-                                            text: "Zoom 3",
-                                            videoURL: "assets/video/zoom3.mp4",
                                             disabled: true
                                         },
                                         {
                                             id: "zoom4",
                                             text: "Zoom 4",
-                                            videoURL: "assets/video/zoom4.mp4",
                                             disabled: true
                                         },
                                         {
                                             id: "zoom5",
                                             text: "Zoom 5",
-                                            videoURL: "assets/video/zoom5.mp4",
                                             disabled: true
                                         }
                                     ]
@@ -3058,7 +3052,7 @@
                     case "endAnimation.animation":
                         var animationType = "endAnimation";
 
-                        $(listOfDropdownsInEditor[i]).select2({
+                        $(listOfDropdownsInEditor[i]).select2stx({
                             dropdownParent: $("#edit-slide-modal"),
                             width: "100%",
                             selectionCssClass: "selection-transition-effect",
@@ -3235,7 +3229,7 @@
                     case "startAnimation.animation":
                         var animationType = "startAnimation";
 
-                        $(listOfDropdownsInEditor[i]).select2({
+                        $(listOfDropdownsInEditor[i]).select2stx({
                             dropdownParent: $("#edit-slide-modal"),
                             width: "100%",
                             selectionCssClass: "selection-transition-effect",
@@ -3530,11 +3524,18 @@
         }
 
         function clearEditLayerColorPickerElements() {
-            for (var property in colorPickerArray) {
-                if (colorPickerArray.hasOwnProperty(property)) {
-                    colorPickerArray[property].pickr.setColor(null, true);
-                }
-            }
+            colorPickers.forEach(function(picker){
+                if(!picker.name.includes("slide"))
+                    picker.pickr.setColor(null, true)
+            })
+        }
+
+        function setColorPicker(name, color){
+
+            colorPickers.forEach(function(colorPicker){
+                if(colorPicker.name == name)
+                    colorPicker.pickr.setColor(color)
+            })
         }
 
         $addTextButton.click(createTextElement);
@@ -3642,7 +3643,7 @@
             var settings = hover ? elementSettingsHover : elementSettings;
 
             for (var key in settings) {
-                if (settings[key].type == "radio") settings[key].checked = false;
+                if (settings[key].type == "radio" || settings[key].type == "checkbox") settings[key].checked = false;
                 else if (settings[key]) settings[key].value = "";
             }
 
@@ -3665,8 +3666,8 @@
                                         .hasClass("STX-color-picker")
                                 ) {
                                     var pickerColor = val === "" ? null : val;
-                                    if (hover) colorPickerArray[key + ".hover"].pickr.setColor(pickerColor);
-                                    else colorPickerArray[key].pickr.setColor(pickerColor);
+                                    var name = hover ? key + '.hover' : key
+                                    setColorPicker(name, pickerColor)
                                 }
                             } else if (settings[key].classList.contains("unit")) {
                                 if (typeof val == "string") {
@@ -3692,7 +3693,7 @@
                                 if (typeof val2 == "boolean") settings[key + "." + key2].checked = val2;
 
                                 if (settings[key + "." + key2]) settings[key + "." + key2].value = val2;
-                                if ($(settings[key + "." + key2]).data('select2')) $(settings[key + "." + key2]).val(val2).trigger("change");
+                                if ($(settings[key + "." + key2]).data('select2stx')) $(settings[key + "." + key2]).val(val2).trigger("change");
                             }
                         }
                     }
@@ -3875,8 +3876,35 @@
             return options.slides[currentSlide];
         }
 
-        function onLayerMouseDown(val, shiftKey) {
-            setCurrentElement(val);
+        function getIndexByID(id, slideIndex ){
+            var index = -1
+			if(options.slides[slideIndex].elements){
+				options.slides[slideIndex].elements.forEach(function(el, i){
+					if("n" + el.id == id)
+						index = i;
+				})
+			}
+            return index;
+        }
+
+        function onLayerEditorMouseDown(id, shiftKey) {
+            var index
+            options.slides.forEach(function(slide, i){
+                index = getIndexByID(id, i)
+                if(index != -1) {
+                    if(i != currentSlide){
+                        currentSlide = i;
+                        showSlide(currentSlide)
+                    }
+                    onLayerMouseDown(index, shiftKey)
+                }
+            })
+
+        }
+
+        function onLayerMouseDown(index, shiftKey) {
+
+            setCurrentElement(index);
 
             if (!shiftKey) {
                 $(".selected-layer").removeClass("selected-layer");
@@ -3927,7 +3955,7 @@
         }
 
         var layerRenderer = new STX.LayerRenderer({
-            onLayerMouseDown: onLayerMouseDown,
+            onLayerMouseDown: onLayerEditorMouseDown,
             onLayerMouseUp: onLayerMouseUp,
             onLayerMove: onLayerMove
         });

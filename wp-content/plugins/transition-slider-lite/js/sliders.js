@@ -707,7 +707,7 @@
                     if (_s.keyboard && !_s.keyboard.enable) _s.keyboard = false;
                     if (_s.autoplay && !_s.autoplay.enable) _s.autoplay = false;
                     if (_s.shadow && _s.shadow == "off") _s.shadow = null;
-                    _s.initialSlide = 0;
+                    if (_s.initialSlide) _s.initialSlide = parseInt(_s.initialSlide);
                     _s.hashNavigation = false;
 
                     for (var key in _s.slides) {
@@ -749,6 +749,32 @@
                         .fadeOut("fast");
                 });
             });
+        }
+
+        function openModal(type, title) {
+            modal.fadeIn("fast", function() {});
+
+            modalTitle.text(title);
+            $(".slider_preview").hide();
+
+            modal.removeClass("previewActive");
+            modal.removeClass("importActive");
+
+            switch (type) {
+                case "import":
+                    modal.addClass("importActive");
+                    importInput.show();
+                    importText.show();
+                    break;
+            }
+        }
+        function closeModal() {
+            $("#preview-slider-modal").fadeOut("fast", function() {});
+
+            if (!$.isEmptyObject($("#slider-preview").data())) {
+                slider = $("#slider-preview").data("transitionSlider");
+                slider.stopSlider();
+            }
         }
 
         function closeImportModal() {

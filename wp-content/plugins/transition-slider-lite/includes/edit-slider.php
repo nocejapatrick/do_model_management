@@ -47,7 +47,18 @@
 
                                                             </div>
 
-                                                        <div style="font-size: 14px;background-color: #f8bf3a;border-radius: 4px;padding: 4px;margin: 20px 0px 0px 0px;text-align: center;color: #333; font-weight:bold"><div>This is Transition Slider Lite. Get PRO version to enable more features - premium templates, import &amp; export sliders, more options for slider responsive size.</div></div>
+                                                        <div class="STX-pro-banner">
+                                <div style="font-size: 26px;">Why upgrade to Transition Slider Pro?</div>
+                                <div class="STX-pro-banner-thumbs-wrapper">
+                                    <a class="STX-pro-banner-thumb STX-banner-1" href="https://transitionslider.com/templates" target="_blank">High quality templates</a>
+                                    <a class="STX-pro-banner-thumb STX-banner-2" href="https://transitionslider.com/templates/urban-shop" target="_blank">Quality text animations</a>
+                                    <a class="STX-pro-banner-thumb STX-banner-3" href="https://transitionslider.com/templates" target="_blank">iFrame element and more...</a>
+                                    <a class="STX-pro-banner-thumb STX-banner-4" href="https://transitionslider.com/templates" target="_blank">Adjust slider and layer settings on all devices</a>
+                                    <a class="STX-pro-banner-thumb STX-banner-5" href="https://transitionslider.com/templates" target="_blank">Import / Export sliders</a>
+                                    <a class="STX-pro-banner-thumb STX-banner-6" href="https://transitionslider.com/templates" target="_blank">Slide transitions: Line advanced, Crossfade gradient...</a>
+                                    <a class="STX-pro-banner-thumb STX-banner-7" href="https://codecanyon.net/item/transition-slider-wordpress-plugin/23531533/support" target="_blank">6 months support from purchase with options to extend</a>
+                                </div>
+                            </div>
 
                                                         <div class="STX-admin-content STX-table STX-table-fixed STX-content">
                                 <div class="STX-tr">
@@ -354,6 +365,30 @@
                                         </tr>
                                     </table>
                                 </div>
+
+
+                                <div class="stx-layers-static">
+
+                                    <div class="stx-layers-canvas-static"></div>
+
+                                    <table class="stx-layers-content-static">
+                                        <tr class="row-top">
+                                            <td align="left" class="col-left"></td>
+                                            <td align="center" class="col-center"></td>
+                                            <td align="right" class="col-right"></td>
+                                        </tr>
+                                        <tr class="row-center">
+                                            <td align="left" class="col-left"></td>
+                                            <td align="center" class="col-center"></td>
+                                            <td align="right" class="col-right"></td>
+                                        </tr>
+                                        <tr class="row-bottom">
+                                            <td align="left" class="col-left"></td>
+                                            <td align="center" class="col-center"></td>
+                                            <td align="right" class="col-right"></td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </div>
 
 
@@ -389,12 +424,16 @@
                                     <div class="accordion">
                                         <h3 class="slide-settings-accordion-menu">Background</h3>
                                         <div class="slide-settings-accordion-content">
+
                                             <div class="STX-element-title">Choose Image or Video</div>
                                             <input type="hidden" class="STX-element-input-button-left" placeholder="Media path..." id="src" name="src">
                                             <div class="STX-slide-image-preview STX-fullline-element STX-slide-src">
                                                 <img class="STX-slide-src-preview">
                                                 <video class="STX-slide-src-preview-video" preload="metadata">
                                             </div>
+
+                                            <div class="STX-element-title STX-inline-element-left STX-row-size100">Background color</div>
+                                            <input type="text" class="color-picker slide-option STX-inline-element-left STX-row-size100" data-alpha="true" name="backgroundColor" id="backgroundColor" >
                                         </div>
 
                                         <h3 class="slide-settings-accordion-menu">Thumbnail</h3>
@@ -453,9 +492,26 @@
                                                     <input class="STX-element-input-label-left" type="number" min="0" max="10" id="blur" name="blur">
                                                 </div>
                                             </div>
+
+
+
+
+                                                                                    </div>
+
+
+                                                                                <h3 class="slide-settings-accordion-menu">Autoplay</h3>
+                                        <div class="slide-settings-accordion-content">
+                                            <div class="STX-element-title STX-inline-element-left STX-row-size100">Duration<div class="property-description" title='PRO FEATURE - with this option you can set each slide to have a different autoplay timer'></div></div>
+
+                                            <div class="STX-element-input-label-wrapper STX-inline-element-left STX-row-size30">
+                                                <input disabled class="STX-element-input-label-left" type="number" id="autoplay" name="autoplay">
+                                                <span class="STX-element-input-label-right input-group-text">ms</span>
+                                            </div>
                                         </div>
 
-                                        <h3 class="slide-settings-accordion-menu">Advanced</h3>
+
+
+                                                                                <h3 class="slide-settings-accordion-menu">Advanced</h3>
                                         <div class="slide-settings-accordion-content">
                                             <div class="STX-element-title STX-inline-element-left STX-row-size40">Full Slide Link</div>
                                             <input type="text" name="url" id="url" class="STX-element-input STX-inline-element-right STX-row-size60">
@@ -868,6 +924,15 @@
                                                 <input name="position.offsetY" type="number" class="STX-element-input-label-left">
                                                 <span class="STX-element-input-label-right input-group-text">px</span>
                                             </div>
+
+
+                                             <div class="STX-element-title STX-inline-element-left STX-row-size60">Static ( show on all slides )<div class="property-description" title='Display element on a separate layer over all slides'></div></div>
+                                            <div class="STX-inline-element-left STX-row-size40">
+                                                <input type="checkbox" name="static" aria-label="Static" class="STX-element-input STX-inline-element-left STX-row-size10 STX-element-checkbox" value="">
+                                            </div>
+
+
+
                                         </div>
 
                                         <h3 class="element-settings-accordion-menu">Size</h3>
@@ -1020,7 +1085,17 @@
                                             <textarea name="customCSS" class="STX-element-textarea STX-fullline-element"></textarea>
                                         </div>
 
-                                        <h3 class="element-settings-accordion-menu img-el video-el">On click</h3>
+                                        <h3 class="element-settings-accordion-menu">CSS Classes</h3>
+
+
+                                                                                    <div class="element-settings element-settings-accordion-content">
+                                             <div class="STX-element-title STX-inline-element-left STX-row-size40">CSS Classes<div class="property-description" title='PRO FEATURE    Add your custom CSS class WITHOUT the dot, e.g: my-class. Add multiple classes separated with space, e.g: my-class my-class-2. Classes for slide navigation: slide-next, slide-prev. Classes for go to slide: slide-1, slide-2, ...'></div></div>
+                                            <input type="text" name="" id="" disabled class="STX-element-input STX-inline-element-right STX-row-size60 btn-disabled">
+                                        </div>
+
+
+
+                                                                                <h3 class="element-settings-accordion-menu img-el video-el">On click</h3>
                                         <div class="element-settings element-settings-accordion-content img-el video-el">
                                             <div class="STX-element-title STX-inline-element-left STX-row-size30">Action</div>
                                             <select name="onClick.type" class="STX-element-dropdown STX-inline-element-left STX-row-size70 STX-content-animation-type">

@@ -74,4 +74,4 @@ setTimeout(function(){
 
 </script>
 <?php }
-add_action('wp_head','sta_init_frontend_js');
+add_action('wp_footer','sta_init_frontend_js', 99999);
