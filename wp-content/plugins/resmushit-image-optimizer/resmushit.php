@@ -4,14 +4,14 @@
  * @author    Charles Bourgeaux <hello@resmush.it>
  * @license   GPL-2.0+
  * @link      http://www.resmush.it
- * @copyright 2020 Resmush.it
+ * @copyright 2021 Resmush.it
  *
  * @wordpress-plugin
  * Plugin Name:       reSmush.it Image Optimizer
  * Plugin URI:        https://wordpress.org/plugins/resmushit-image-optimizer/
  * Description:       Image Optimization API. Provides image size optimization
- * Version:           0.3.11
- * Timestamp:         2020.09.26
+ * Version:           0.4.1
+ * Timestamp:         2021.05.09
  * Author:            reSmush.it
  * Author URI:        https://resmush.it
  * Author:            Charles Bourgeaux
@@ -55,21 +55,21 @@ function resmushit_activate() {
 			update_option( 'resmushit_on_upload', '1' );
 		if(get_option('resmushit_statistics') === false)
 			update_option( 'resmushit_statistics', '1' );
-		if(get_option('resmushit_total_optimized') === false)
+		if(get_option('resmushit_total_optimized') === false || get_option('resmushit_total_optimized') == "")
 			update_option( 'resmushit_total_optimized', '0' );
-		if(get_option('resmushit_cron') === false)
+		if(get_option('resmushit_cron') === false || get_option('resmushit_cron') == "")
 			update_option( 'resmushit_cron', 0 );
-		if(get_option('resmushit_cron_lastaction') === false)
+		if(get_option('resmushit_cron_lastaction') === false  || get_option('resmushit_cron_lastaction') == "")
 			update_option( 'resmushit_cron_lastaction', 0 );
-		if(get_option('resmushit_cron_lastrun') === false)
+		if(get_option('resmushit_cron_lastrun') === false || get_option('resmushit_cron_lastrun') == "")
 			update_option( 'resmushit_cron_lastrun', 0 );
-		if(get_option('resmushit_cron_firstactivation') === false)
+		if(get_option('resmushit_cron_firstactivation') === false || get_option('resmushit_cron_firstactivation') == "")
 			update_option( 'resmushit_cron_firstactivation', 0 );
-		if(get_option('resmushit_preserve_exif') === false)
+		if(get_option('resmushit_preserve_exif') === false || get_option('resmushit_preserve_exif') == "")
 			update_option( 'resmushit_preserve_exif', 0 );
-		if(get_option('resmushit_remove_unsmushed') === false)
+		if(get_option('resmushit_remove_unsmushed') === false || get_option('resmushit_remove_unsmushed') == "")
 			update_option( 'resmushit_remove_unsmushed', 0 );
-		if(get_option('resmushit_has_no_backup_files') === false)
+		if(get_option('resmushit_has_no_backup_files') === false || get_option('resmushit_has_no_backup_files') == "")
 			update_option( 'resmushit_has_no_backup_files', 0 );
 	}
 }
@@ -142,7 +142,7 @@ function resmushit_process_images($attachments, $force_keep_original = TRUE) {
 	return $attachments;
 }
 //Automatically optimize images if option is checked
-if(get_option('resmushit_on_upload') OR ( isset($_POST['action']) AND ($_POST['action'] === "resmushit_bulk_process_image" OR $_POST['action'] === "resmushit_optimize_single_attachment" )))
+if(get_option('resmushit_on_upload') OR ( isset($_POST['action']) AND ($_POST['action'] === "resmushit_bulk_process_image" OR $_POST['action'] === "resmushit_optimize_single_attachment" )) OR (defined( 'WP_CLI' ) && WP_CLI ) OR ($is_cron) )
 	add_filter('wp_generate_attachment_metadata', 'resmushit_process_images');   
  
 
@@ -445,3 +445,59 @@ function resmushit_remove_backup_files() {
 	die();
 }	
 add_action( 'wp_ajax_resmushit_remove_backup_files', 'resmushit_remove_backup_files' );	
+
+
+/**
+* 
+* retrieve Attachment ID from Path
+* from : https://pippinsplugins.com/retrieve-attachment-id-from-image-url/
+*
+* @param imageURL
+* @return json object
+*/
+function resmushit_get_image_id($image_url) {
+	global $wpdb;
+	$attachment = $wpdb->get_col($wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE guid='%s';", $image_url )); 
+        return $attachment[0]; 
+}
+
+/**
+* 
+* add Ajax action to restore backups (-unsmushed) from the filesystem
+*
+* @param none
+* @return json object
+*/
+function resmushit_restore_backup_files() {
+	$files=detect_unsmushed_files();
+	$return = array('success' => 0);
+	$wp_upload_dir=wp_upload_dir();
+
+	foreach($files as $f) {
+		$dest = str_replace('-unsmushed', '', $f);
+		$pictureURL = str_replace($wp_upload_dir['basedir'], $wp_upload_dir['baseurl'], $dest);
+		$attachementID = resmushit_get_image_id($pictureURL);
+
+		if(reSmushit::revert($attachementID, true)) {
+			if(unlink($f)) {
+				$return['success']++;
+			}
+		}
+	}
+	echo json_encode($return);
+	//update_option( 'resmushit_has_no_backup_files', 1);
+
+	die();
+}	
+add_action( 'wp_ajax_resmushit_restore_backup_files', 'resmushit_restore_backup_files' );	
+
+
+
+/**
+* 
+* Declares WPCLI extension if in WP_CLI context
+*
+*/
+if( defined( 'WP_CLI' ) && WP_CLI ) {
+	WP_CLI::add_command( 'resmushit', 'reSmushitWPCLI' );
+}

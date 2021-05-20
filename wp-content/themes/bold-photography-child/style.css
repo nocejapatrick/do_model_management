@@ -14,9 +14,9 @@ a{
 	text-align:center;
 }
 
-#catch-instagram-feed-gallery-widget-7 h2{
+#catch-instagram-feed-gallery-widget-7 h2, .section-title{
 	text-align: center;
-	font-size: 3em;
+	font-size: 2.4em !important;
 }
 
 #catch-instagram-feed-gallery-widget-7 .catch-instagram-feed-gallery-widget-wrapper{
@@ -52,6 +52,15 @@ a{
 	font-size: 1em;
 	padding-top: 10px;
 	font-weight: 300;
+}
+
+.artists-container .entry-title{
+	font-size: 1.2em;
+	margin-top: 10px;
+}
+
+.artists-container .entry-title{
+	text-align: center;
 }
 
 .artists-model-image{
@@ -120,9 +129,13 @@ a{
 	margin:20px !important;
 }
 
-#infinite-post-wrap{
+#infinite-post-wrap, .home-posts-container{
 	display: flex;
 	flex-wrap: wrap;
+
+}
+.home #infinite-post-wrap{
+	justify-content: center;
 }
 
 .home .content-area{
@@ -142,7 +155,6 @@ a{
 	right: -388.969px;
 	top: 0px;
 	height: 100vh;
-	background: white !important;
 	transition: .4s all ease-in-out;
 }
 
@@ -156,32 +168,45 @@ a{
 
 #site-navigation li{
 	display: block !important;
-	margin: 0px 80px 0px 60px !important;
+	margin: 0px 90px 0px 70px !important;
 }
 .icon .icon-search{
 	color: black !important;
 }
 #site-navigation li a{
-	font-size: .8em;
+	color: white !important;
+	font-size: 1.2em;
 	font-weight: 300;
 	transform: scale(1);
+	font-weight: bold;
 	transition: .4s all ease-in-out;
 }
 
 #site-navigation li a:hover{
 	transform: scale(1.2);
-	color: black !important;
 	background: transparent;
+}
+.section-title.entry-title{
+	font-size: 2em !important;
 }
 
 #site-header-menu , #site-header-menu .menu-inside-wrapper, #site-navigation, #primary-menu{
 	height: 100%  !important;
+
 }
 
 #primary-search-wrapper .menu-inside-wrapper{
 	height: auto !important;
 }
 #primary-search-wrapper{
+	display: block !important;
+	position: absolute;
+    top: 0px;
+    right: -9px;
+    z-index: 99;
+}
+
+#primary-menu-wrapper .menu-toggle-wrapper{
 	display: block !important;
 }
 #primary-menu{
@@ -208,17 +233,72 @@ a{
 }
 
 #primary-menu-wrapper > .menu-inside-wrapper {
-	background: white !important;
-    right: 0px !important;
+    right: 0px;
 	visibility: visible !important;
 	position: absolute;
 	width: auto !important;
 	max-width: none !important;
 	top: 0px !important;
+	opacity: 1 !important;
+}
+#primary-search-wrapper .icon.icon-close{
+	fill: white !important;
 }
 
+#infinite-handle button{
+	border-radius: 100% !important;
+    font-size: 1.4em !important;
+	padding: 0px 19px 12px 19px !important;
+}
+#open-nav{
+	transition: .3s all ease-in-out;
+	opacity: 1;
+}
 
-@media screen and (max-width:780px) {
+#wp-custom-header-video{
+	top:-20px !important;
+}
+
+.artists-container{
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.artists-container .artist{
+	flex:0 0 33.333%;
+	padding: 50px;
+	cursor: pointer;
+}
+
+.artists-container .artist h4{
+	color: white;
+	transition: .3s all ease-in-out;
+}
+.artists-container .artist:hover h4{
+	color:#f9a926;
+}
+
+#primary-menu li:nth-child(5) a, #primary-menu li:nth-child(6) a{
+	color: #f9a926 !important;
+}
+@media screen and (max-width:780px) {	
+	#site-navigation li a{
+		font-size: .9em;
+	}
+
+	.section-title.entry-title{
+		font-size: 1.7em !important;
+	}
+	#site-navigation li{
+		display: block !important;
+		margin: 0px 70px 0px 50px !important;
+	}
+
+	.artists-container .artist{
+		flex:0 0 33.333%;
+		padding: 20px;
+		cursor: pointer;
+	}
 
 	.artists-model-container > *{
 		flex: 0 0 33%;
@@ -260,6 +340,10 @@ a{
 
 @media screen and (max-width:500px) {
 
+	#primary-search-wrapper{
+		right: 7px;
+	}
+
 
 	#catch-instagram-feed-gallery-widget-7 h2{
 		font-size: 2em;
@@ -292,8 +376,14 @@ a{
 	}
 
 	.home #infinite-post-wrap article {
-		padding: 35px 20px 20px 20px;
-		flex: 0 0 94%;
+		padding: 20px 0px 0px 0px;
+		flex: 0 0 100%;
 		margin-bottom: 35px;
+	}
+	.artists-container .artist{
+		flex:0 0 100%;
+	}
+	.artists-container .artist h4{
+		font-size: 1.3em;
 	}
 }

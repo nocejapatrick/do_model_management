@@ -46,18 +46,19 @@
 						<?php get_search_form(); ?>
 					</div>
 				</div>
-			</div>
-		</div>
+				<div id="primary-search-wrapper" class="menu-wrapper">
+					<div class="menu-toggle-wrapper">
+						<button id="close-nav" class="close-btn"><svg class="icon icon-close" > <use href="#icon-close" xlink:href="#icon-close"></use> </svg></button>
+					</div>
 
-		<div id="primary-search-wrapper" class="menu-wrapper">
-			<div class="menu-toggle-wrapper">
-				<button id="close-nav" class="close-btn"><svg class="icon icon-close" > <use href="#icon-close" xlink:href="#icon-close"></use> </svg></button>
-			</div>
-
-			<!-- <div class="menu-inside-wrapper">
-				<div class="search-container">
-					<?php get_Search_form(); ?>
+					<!-- <div class="menu-inside-wrapper">
+						<div class="search-container">
+							<?php get_Search_form(); ?>
+						</div>
+					</div> -->
 				</div>
-			</div> -->
+			</div>
 		</div>
+
+	
 	</div>

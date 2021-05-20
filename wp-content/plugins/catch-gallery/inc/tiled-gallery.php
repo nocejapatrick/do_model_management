@@ -111,6 +111,10 @@ if ( ! class_exists( 'Catch_Gallery_Tiled_Gallery' ) ) :
 			}
 		}
 
+		public function column_style() {
+			wp_enqueue_style( 'catch-gallery-column', plugin_dir_url( __FILE__ ) . '../css/column.css', array(), CATCH_GALLERY_VERSION );
+		}
+
 		public function default_scripts_and_styles() {
 			wp_enqueue_script( 'tiled-gallery', plugin_dir_url( __FILE__ ) . '../js/tiled-gallery.js', array( 'jquery' ) );
 
@@ -135,6 +139,9 @@ if ( ! class_exists( 'Catch_Gallery_Tiled_Gallery' ) ) :
 			if ( is_feed() || defined( 'IS_HTML_EMAIL' ) ) {
 				return '';
 			}
+
+			//Columns css
+			$this->column_style();
 
 			if ( method_exists( $this, $this->atts['type'] . '_talavera' ) ) {
 				// Enqueue styles and scripts

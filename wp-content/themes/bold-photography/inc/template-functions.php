@@ -462,7 +462,7 @@ function bold_photography_get_posts( $section ) {
 		$no_of_post = $number;
 	}
 
-	$args['posts_per_page'] = $no_of_post;
+	$args['posts_per_page'] = 3;
 
 	if ( ! $no_of_post ) {
 		return;

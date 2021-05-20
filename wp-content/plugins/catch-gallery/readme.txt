@@ -50,6 +50,13 @@ Not so easy way (via FTP) :
 For Detailed Plugin instructions, checkout Instructions tab at https://catchplugins.com/plugins/catch-gallery/#instructions
 
 == Changelog ==
+
+= 1.6.7 (Released: May 04, 2021) =
+* Updated: CSS breakpoints for better responsiveness
+
+= 1.6.6 (Released: April 21, 2021) =
+* Bug Fixed: Gallery Responsive issue
+
 = 1.6.5 (Released: March 04, 2021) =
 * Bug Fixed: Deprecate required parameters after optional parameters in function/method signatures
 * Compatibility check up to version 5.7

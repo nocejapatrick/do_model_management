@@ -5,13 +5,18 @@
   The file is saved in your theme folder: /wp-content/themes/bold-photography-child/js/get-scouted-form.js  */
   $(document).ready(function(){
 
+
+  
+    var formTop = $('#cf7sg-form-get-scouted-form').offset().top-70;
+
+
     var sliderHeights = [];
 
     $(".container.cf7sg-collapsible.glider-slide > .row").each(function(){
       sliderHeights.push(parseInt($(this).css('height')));
     });
-    
-      $('.cf7sg-slider-section .glider').css('height',(sliderHeights[0]+50));
+
+    $('.cf7sg-slider-section .glider').css('height',(sliderHeights[0]+50));
 
     function checkIfFormHasEmpty(){
       var check = true;
@@ -30,6 +35,10 @@
     $('.slider-control.slider-next.ui-button').click(function(){
 
       console.log(parseInt($(".container.cf7sg-collapsible.glider-slide.active.center.visible .row").css('height')));
+      $("HTML, BODY").animate({
+        scrollTop: formTop
+      }, 1000);
+
 
       counter++;
       $('.cf7sg-slider-section .glider').css('height',(sliderHeights[counter]+50));
@@ -43,6 +52,9 @@
     });
     $('.slider-control.slider-prev.ui-button').click(function(){
       counter--;
+        $("HTML, BODY").animate({
+        scrollTop: formTop
+      }, 1000);
       $('.cf7sg-slider-section .glider').css('height',(sliderHeights[counter]+50));
     });
 
@@ -69,4 +81,4 @@
   });
 
 })(jQuery)
-                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                      

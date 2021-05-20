@@ -8,7 +8,7 @@
  */
 
 ?>
-<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+<article id="post-<?php the_ID(); ?>" <?php post_class('fade-in-left'); ?>>
 	<?php
 		$header_image = bold_photography_featured_overall_image();
 

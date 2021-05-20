@@ -8,7 +8,7 @@
  * Plugin Name: Catch Gallery
  * Plugin URI:  https://catchplugins.com/plugins/catch-gallery/
  * Description: Catch Gallery allows you to add three different types of layouts (in addition to the default layout provided by WordPress – Thumbnail Grid) for your galleries to stand out—Tiled Mosaic, Square Tiles, Circles.
- * Version:     1.6.5
+ * Version:     1.6.7
  * Author:      Catch Plugins
  * Author URI:  catchplugins.com
  * License:     GPL-2.0+
@@ -36,7 +36,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 if ( ! defined( 'CATCH_GALLERY_VERSION' ) ) {
-	define( 'CATCH_GALLERY_VERSION', '1.6.5' );
+	define( 'CATCH_GALLERY_VERSION', '1.6.7' );
 }
 
 // The URL of the directory that contains the plugin
